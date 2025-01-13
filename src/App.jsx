@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react'
 import { remixText } from './api/remix'
+import { Button } from './components/ui/button'
+import { Textarea } from './components/ui/textarea'
+import { TranslationHistory } from './components/TranslationHistory'
 
 function App() {
   const [inputText, setInputText] = useState('')
@@ -7,7 +10,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Check for API key on mount
   useEffect(() => {
     if (!import.meta.env.VITE_OPENAI_API_KEY) {
       setError('OpenAI API key is not configured. Please check your .env file.')
@@ -36,52 +38,61 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <h1 className="text-3xl font-bold text-center mb-8 text-white">DonutMixer</h1>
-        
-        <div className="space-y-6">
-          <div>
-            <label htmlFor="input" className="block text-sm font-medium text-gray-300">
-              Input Text
-            </label>
-            <textarea
-              id="input"
-              className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 placeholder-gray-400"
-              rows="4"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Paste your text here..."
-              disabled={isLoading}
-            />
-          </div>
-
-          <button
-            onClick={handleRemix}
-            disabled={isLoading || !inputText.trim()}
-            className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 focus:ring-offset-gray-900"
-          >
-            {isLoading ? 'Remixing...' : 'Remix Content'}
-          </button>
-
-          {error && (
-            <div className="text-red-400 text-sm bg-red-900 bg-opacity-50 p-3 rounded-md border border-red-700">
-              {error}
+    <div className="flex min-h-screen bg-background">
+      <TranslationHistory />
+      
+      <div className="flex-1 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto space-y-8">
+          <h1 className="text-4xl font-light text-center text-foreground tracking-[6px]">DonutLols Translator</h1>
+          
+          <div className="space-y-6">
+            <div className="space-y-2">
+              <label htmlFor="input" className="text-sm text-muted-foreground">
+                Donut-Speak
+              </label>
+              <div className="relative rounded-md overflow-hidden">
+                <Textarea
+                  id="input"
+                  value={inputText}
+                  onChange={(e) => setInputText(e.target.value)}
+                  placeholder="Paste your Freedom Thoughts here..."
+                  disabled={isLoading}
+                  rows={5}
+                  className="bg-alternative border-alternative-100 focus:border-brand focus:ring-brand placeholder:text-muted-foreground resize-none us-flag-bg"
+                />
+              </div>
             </div>
-          )}
 
-          <div>
-            <label htmlFor="output" className="block text-sm font-medium text-gray-300">
-              Remixed Text
-            </label>
-            <textarea
-              id="output"
-              className="mt-1 block w-full rounded-md border-gray-600 bg-gray-800 text-white shadow-sm placeholder-gray-400"
-              rows="4"
-              value={outputText}
-              readOnly
-              placeholder={isLoading ? 'Remixing your text...' : 'Remixed text will appear here...'}
-            />
+            <Button
+              onClick={handleRemix}
+              disabled={isLoading || !inputText.trim()}
+              className="w-full bg-brand hover:bg-brand-500 text-background font-medium transition-colors"
+              variant="default"
+            >
+              {isLoading ? 'Translating...' : 'Translate Content'}
+            </Button>
+
+            {error && (
+              <div className="p-3 text-sm text-destructive-foreground bg-destructive/10 rounded-md border border-destructive/20">
+                {error}
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <label htmlFor="output" className="text-sm text-muted-foreground">
+                Lols Translation
+              </label>
+              <div className="relative rounded-md overflow-hidden">
+                <Textarea
+                  id="output"
+                  value={outputText}
+                  readOnly
+                  placeholder={isLoading ? 'Translating your text...' : 'Translated text will appear here...'}
+                  rows={8}
+                  className="bg-alternative border-alternative-100 placeholder:text-muted-foreground resize-none uk-flag-bg"
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>

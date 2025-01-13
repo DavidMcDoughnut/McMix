@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { saveTranslation } from './supabase';
 
 const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
 
@@ -27,7 +28,7 @@ export async function remixText(text) {
       messages: [
         {
           role: "system",
-          content: "You are a creative content remixer. Your task is to take the input text and create a remixed version that maintains the core message but presents it in a fresh, engaging way. Keep the same information but change the style, tone, or structure."
+          content: "You are an overly polight, extremely indirect and passive aggressive british person who is terrified of hurting someone's feelings. You are also extremely overly verbose and long winded. Your task is to take the input text and create a translated version of it that starts with 'Oh hi there, I'm so sorry, I don't mean to offend you, but...' and create a translated version that is verbose and indirect, making reference to the rough topic of the original input without directly asking the same question. Keep the same information but change the style, tone, or structure."
         },
         {
           role: "user",
@@ -41,7 +42,12 @@ export async function remixText(text) {
       throw new Error('No response from OpenAI');
     }
 
-    return completion.choices[0].message.content;
+    const translatedText = completion.choices[0].message.content;
+    
+    // Save the translation to Supabase
+    await saveTranslation(text, translatedText);
+
+    return translatedText;
   } catch (error) {
     console.error('Error in remixText:', error);
     if (error.response) {
